@@ -21,7 +21,7 @@ begin
 	
 	-- Gout = Gin_1 OR (Pin_1 AND Gin_2)
 	compute_Pin_1_and_Gin_2: AND_2 
-		port map(A => Pin_1, B => Gin_2, Y => Pin1_and_Gin_2);
+		port map(A => Pin_1, B => Gin_2, Y => Pin_1_and_Gin_2);
 	compute_Gout: OR_2 
-		port map(A => Gin_1, B => Pin1_and_Gin_2, Y => Gout);
+		port map(A => Gin_1, B => Pin_1_and_Gin_2, Y => Gout);
 end Struct;
