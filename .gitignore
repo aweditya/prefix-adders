@@ -2,3 +2,7 @@ PrefixAdders.qsf
 PrefixAdders.qpf
 db/
 *.bak
+PrefixAdders_nativelink_simulation.rpt
+incremental_db/
+simulation/
+output_files/
