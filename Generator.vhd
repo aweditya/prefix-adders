@@ -14,7 +14,7 @@ end entity Generator;
 architecture Struct of Generator is
 begin
 	-- Carry generation logic G = A.B
-	generate: AND_2 port map (A => A, B => B, Y => G);
+	generator: AND_2 port map (A => A, B => B, Y => G);
 	
 	-- Carry propagation logic P = A XOR B
 	-- Because of the way P is used, we can
