@@ -12,6 +12,7 @@ end entity Generator;
 
 -- Structural description of the generator
 architecture Struct of Generator is
+begin
 	-- Carry generation logic G = A.B
 	generate: AND_2 port map (A => A, B => B, Y => G);
 	
