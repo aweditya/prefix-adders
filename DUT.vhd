@@ -10,7 +10,8 @@ architecture DutWrap of DUT is
    component KoggeStoneAdder is
 		port (
 			A, B: in std_logic_vector(7 downto 0);
-			S: out std_logic_vector(8 downto 0);
+			Cout: out std_logic;
+			S: out std_logic_vector(7 downto 0)
 		);
    end component;
 begin
@@ -33,7 +34,8 @@ begin
 					B(2) => input_vector(2),
 					B(1) => input_vector(1),
 					B(0) => input_vector(0),
-					S(8) => output_vector(8),
+					
+					Cout => output_vector(8),
 					S(7) => output_vector(7),
 					S(6) => output_vector(6),
 					S(5) => output_vector(5),
