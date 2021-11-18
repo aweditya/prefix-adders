@@ -18,8 +18,9 @@ begin
 	
 	-- Carry propagation logic P = A XOR B
 	-- Because of the way P is used, we can
-	-- also use P = A + B
+	-- also use P = A + B (but while computing
+	-- the sum, P = A XOR B is better)
 	
-	-- propagate: XOR_2 port map (A => A, B => B, Y => P);
-	propagate: OR_2 port map (A => A, B => B, Y => P);
+	propagate: XOR_2 port map (A => A, B => B, Y => P);
+	-- propagate: OR_2 port map (A => A, B => B, Y => P);
 end Struct;
