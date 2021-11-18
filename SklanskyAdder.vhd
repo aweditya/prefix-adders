@@ -53,40 +53,24 @@ begin
 		G2(4*i + 1 downto 4*i) <= G1(4*i + 1 downto 4*i);
 		P2(4*i + 1 downto 4*i) <= P1(4*i + 1 downto 4*i);
 		
-		prefix1_1: ProcessingComponent
-		port map(Gin_1 => G1(4*i + 2), Pin_1 => P1(4*i + 2),
-					Gin_2 => G1(4*i + 1), Pin_2 => P1(4*i + 1),
-					Gout => G2(4*i + 2), Pout => P2(4*i + 2));
-					
-		prefix1_2: ProcessingComponent
-		port map(Gin_1 => G1(4*i + 3), Pin_1 => P1(4*i + 3),
-					Gin_2 => G1(4*i + 1), Pin_2 => P1(4*i + 1),
-					Gout => G2(4*i + 3), Pout => P2(4*i + 3));
+		prefix1: for j in 0 to 1 generate
+			add_instance: ProcessingComponent
+			port map(Gin_1 => G1(4*i + j + 2), Pin_1 => P1(4*i + j + 2),
+						Gin_2 => G1(4*i + 1), Pin_2 => P1(4*i + 1),
+						Gout => G2(4*i + j + 2), Pout => P2(4*i + j + 2));
+		end generate;
 	end generate;
 	
 	level2: for i in 0 to 0 generate
 		Gfinal(8*i + 3 downto 8*i) <= G2(8*i + 3 downto 8*i);
 		Pfinal(8*i + 3 downto 8*i) <= P2(8*i + 3 downto 8*i);
 		
-		prefix2_1: ProcessingComponent
-		port map(Gin_1 => G2(8*i + 4), Pin_1 => P2(8*i + 4),
-					Gin_2 => G2(8*i + 3), Pin_2 => P2(8*i + 3),
-					Gout => Gfinal(8*i + 4), Pout => Pfinal(8*i + 4));
-					
-		prefix2_2: ProcessingComponent
-		port map(Gin_1 => G2(8*i + 5), Pin_1 => P2(8*i + 5),
-					Gin_2 => G2(8*i + 3), Pin_2 => P2(8*i + 3),
-					Gout => Gfinal(8*i + 5), Pout => Pfinal(8*i + 5));
-					
-		prefix2_3: ProcessingComponent
-		port map(Gin_1 => G2(8*i + 6), Pin_1 => P2(8*i + 6),
-					Gin_2 => G2(8*i + 3), Pin_2 => P2(8*i + 3),
-					Gout => Gfinal(8*i + 6), Pout => Pfinal(8*i + 6));
-					
-		prefix2_4: ProcessingComponent
-		port map(Gin_1 => G2(8*i + 7), Pin_1 => P2(8*i + 7),
-					Gin_2 => G2(8*i + 3), Pin_2 => P2(8*i + 3),
-					Gout => Gfinal(8*i + 7), Pout => Pfinal(8*i + 7));
+		prefix2: for j in 0 to 3 generate
+			prefix2_1: ProcessingComponent
+			port map(Gin_1 => G2(8*i + j + 4), Pin_1 => P2(8*i + j + 4),
+						Gin_2 => G2(8*i + 3), Pin_2 => P2(8*i + 3),
+						Gout => Gfinal(8*i + j + 4), Pout => Pfinal(8*i + j + 4));
+		end generate;
 	end generate;
 	
 	-- Final computation
