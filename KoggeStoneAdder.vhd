@@ -17,8 +17,9 @@ architecture Add of KoggeStoneAdder is
 	signal G0, P0: std_logic_vector(7 downto 0) := (others => '0');
 	signal G1, P1: std_logic_vector(7 downto 0) := (others => '0');
 	signal G2, P2: std_logic_vector(7 downto 0) := (others => '0');
-	signal G, P: std_logic_vector(7 downto 0) := (others => '0');
+	signal Gfinal, Pfinal: std_logic_vector(7 downto 0) := (others => '0');
 	signal C: std_logic_vector(8 downto 0) := (others => '0');
+	signal P_and_C: std_logic_vector(7 downto 0) := (others => '0');
 	
 	-- Component initialisation
 	component Generator is 
@@ -45,8 +46,8 @@ begin
 		end generate level0_lower;
 		level0_higher: if i > 0 generate
 			prefix0: ProcessingComponent
-			port map(Gin_1 => G0(i - 1), Pin_1 => P0(i - 1),
-						Gin_2 => G0(i), Pin_2 => P0(i),
+			port map(Gin_1 => G0(i), Pin_1 => P0(i),
+						Gin_2 => G0(i - 1), Pin_2 => P0(i - 1),
 						Gout => G1(i), Pout => P1(i));
 		end generate level0_higher;
 	end generate;
@@ -58,33 +59,43 @@ begin
 		end generate level1_lower;
 		level1_higher: if i > 1 generate
 			prefix1: ProcessingComponent
-			port map(Gin_1 => G1(i - 2), Pin_1 => P1(i - 2),
-						Gin_2 => G1(i), Pin_2 => P1(i),
+			port map(Gin_1 => G1(i), Pin_1 => P1(i),
+						Gin_2 => G1(i - 2), Pin_2 => P1(i - 2),
 						Gout => G2(i), Pout => P2(i));
 		end generate level1_higher;
 	end generate;
 	
 	level2: for i in 0 to 7 generate
 		level2_lower: if i < 4 generate
-			G(i) <= G2(i);
-			P(i) <= P2(i);
+			Gfinal(i) <= G2(i);
+			Pfinal(i) <= P2(i);
 		end generate level2_lower;
 		level2_higher: if i > 3 generate
 			prefix2: ProcessingComponent
-			port map(Gin_1 => G2(i - 4), Pin_1 => P2(i - 4),
-						Gin_2 => G2(i), Pin_2 => P2(i),
-						Gout => G(i), Pout => P(i));
+			port map(Gin_1 => G2(i), Pin_1 => P2(i),
+						Gin_2 => G2(i - 4), Pin_2 => P2(i - 4),
+						Gout => Gfinal(i), Pout => Pfinal(i));
 		end generate level2_higher;
 	end generate;
 	
 	-- Final computation
 	post_process: for i in 0 to 7 generate
 		-- Assuming no input carry for the time being
-		C(i + 1) <= G(i);
+		-- Compute the next stage carry
+		compute_Pi_and_Ci: AND_2
+			port map(A => Pfinal(i), B => C(i), Y => P_and_C(i));
+			
+		compute_next_carry: OR_2
+			port map(A => Gfinal(i), B => P_and_C(i), Y => C(i + 1));
 		
 		-- Final sum logic
+		-- Here we use A XOR B computed in the first along
+		-- with the carry computed in the intermediate
+		-- stage. In case P = A + B and not P = A XOR B, 
+		-- this stage is more complex but it additionally
+		-- requires you to compute A XOR B
 		sum: XOR_2 
-			port map(A => P(i), B => C(i), Y => S(i));
+			port map(A => P0(i), B => C(i), Y => S(i));
 	end generate;
 	Cout <= C(8);
 	
