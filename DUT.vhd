@@ -7,7 +7,7 @@ entity DUT is
 end entity;
 
 architecture DutWrap of DUT is
-   component SklanskyAdder is
+   component BrentKungAdder is
 		port (
 			A, B: in std_logic_vector(7 downto 0);
 			Cout: out std_logic;
@@ -16,7 +16,7 @@ architecture DutWrap of DUT is
    end component;
 begin
 
-   add_instance: SklanskyAdder
+   add_instance: BrentKungAdder
 			port map (
 					A(7) => input_vector(15),
 					A(6) => input_vector(14),
