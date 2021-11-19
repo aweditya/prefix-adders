@@ -61,12 +61,16 @@ begin
 						Gout => G2(4*i + 3), Pout => P2(4*i + 3));
 	end generate;
 	
-	level2: ProcessingComponent
-		port map(Gin_1 => G2(7), Pin_1 => P2(7),
-					Gin_2 => G2(3), Pin_2 => P2(3),
-					Gout => G3(7), Pout => P3(7));
-	G3(6 downto 0) <= G2(6 downto 0);
-	P3(6 downto 0) <= P2(6 downto 0);
+	level2: for i in 0 to 0 generate
+		G3(8*i + 6 downto 8*i) <= G2(8*i + 6 downto 8*i);
+		P3(8*i + 6 downto 8*i) <= P2(8*i + 6 downto 8*i);
+		
+		prefix2: ProcessingComponent
+			port map(Gin_1 => G2(8*i + 7), Pin_1 => P2(8*i + 7),
+						Gin_2 => G2(8*i + 3), Pin_2 => P2(8*i + 3),
+						Gout => G3(8*i + 7), Pout => P3(8*i + 7));
+	end generate; 
+	
 	
 	level3: ProcessingComponent
 		port map(Gin_1 => G3(5), Pin_1 => P3(5),
